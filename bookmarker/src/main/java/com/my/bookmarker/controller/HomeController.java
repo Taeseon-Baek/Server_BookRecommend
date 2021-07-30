@@ -1,4 +1,4 @@
-package com.my.bookmarker;
+package com.my.bookmarker.controller;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
