@@ -8,20 +8,26 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.my.bookmarker.service.BookService;
+import com.my.bookmarker.vo.vanilla.Book;
+
 /**
  * Handles requests for the application home page.
  */
 @RestController
-public class HomeController {
+public class TestController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestController.class);
 	
+	@Autowired
+	private BookService serviceBook;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -39,12 +45,9 @@ public class HomeController {
 		return "home";
 	}
 	
-	@RequestMapping(value="/test/02", method= RequestMethod.GET)
-	public List<String> testGet01() {
-		List<String> result = new ArrayList<String>();
-		result.add("테스트");
-		result.add("입니다");
-		return result;
+	@RequestMapping(value="/book", method= RequestMethod.GET)
+	public List<Book> testGet01() {
+		return serviceBook.selectBook();
 	}
 	
 	@RequestMapping(value="/test/03/{variable}", method= RequestMethod.GET)

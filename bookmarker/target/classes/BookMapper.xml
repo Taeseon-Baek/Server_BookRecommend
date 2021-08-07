@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.my.bookmarker.mapper.BookMapper">
+
+	<insert id = "insertBook" parameterType="com.my.bookmarker.vo.vanilla.Book">
+		INSERT INTO BOOK_TB (
+			ID,
+			TITLE,
+			CONTENT,
+			WRITER_ID
+		)
+		VALUES (
+			#{item.id},
+			#{item.title},
+			#{item.content},
+			#{item.writerId}
+		)
+	</insert>
+	
+	<select id = "selectBook" resultType="com.my.bookmarker.vo.vanilla.Book">
+		SELECT 
+			*
+		FROM
+			BOOK_TB 
+		ORDER BY ID ASC
+	</select>
+	
+</mapper>
