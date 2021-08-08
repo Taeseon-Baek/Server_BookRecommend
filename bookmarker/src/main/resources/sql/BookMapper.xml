@@ -18,6 +18,16 @@
 		)
 	</insert>
 	
+	<select id= "selectBookId" resultType="com.my.bookmarker.vo.generator.Code">
+        SELECT
+            DATE_FORMAT(CURRENT_DATE(), '%y%m%d') AS CODE_DATE,
+            COUNT(*) AS CNT
+        FROM
+            BOOK_TB
+        WHERE
+            ID LIKE CONCAT(DATE_FORMAT(CURRENT_DATE(), '%y%m%d'), '%')
+	</select>
+	
 	<select id = "selectBook" resultType="com.my.bookmarker.vo.vanilla.Book">
 		SELECT 
 			*

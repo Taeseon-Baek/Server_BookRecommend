@@ -7,14 +7,19 @@ import org.springframework.stereotype.Service;
 
 import com.my.bookmarker.mapper.BookMapper;
 import com.my.bookmarker.service.BookService;
+import com.my.bookmarker.vo.generator.Code;
 import com.my.bookmarker.vo.vanilla.Book;
 
 @Service
 public class BookServiceImpl implements BookService {
-	
 	@Autowired
 	private BookMapper mapper;
 
+	@Override
+	public List<Code> selectBookId() {
+		// TODO Auto-generated method stub
+		return mapper.selectBookId();
+	}
 	@Override
 	public void insertBook(Book item) {
 		// TODO Auto-generated method stub
@@ -26,5 +31,4 @@ public class BookServiceImpl implements BookService {
 		// TODO Auto-generated method stub
 		return mapper.selectBook();
 	}
-
 }
