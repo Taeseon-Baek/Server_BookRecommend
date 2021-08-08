@@ -82,6 +82,7 @@ public class InsertController {
 		
 		if (writerCheck.size() != 0) {
 			writerInfo = writerCheck.get(0);
+			serviceWriter.incFreq(writerInfo.getId());
 		} else {
 			codeForm = serviceWriter.selectWriterId().get(0);
 			code = codeForm.getCodeDate();

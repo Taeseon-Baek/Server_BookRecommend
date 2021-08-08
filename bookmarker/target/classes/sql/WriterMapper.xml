@@ -14,6 +14,12 @@
 		)
 	</insert>
 	
+	<update id= "incFreq" parameterType="String">
+		UPDATE WRITER_TB
+		SET FREQUENCY = FREQUENCY + 1
+		WHERE ID = #{id}
+	</update>
+	
 	<select id= "selectWriterId" resultType="com.my.bookmarker.vo.generator.Code">
         SELECT
             DATE_FORMAT(CURRENT_DATE(), '%y%m%d') AS CODE_DATE,
