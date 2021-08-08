@@ -41,7 +41,11 @@ public class InsertController {
 	public Writer test(@PathVariable String name) {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("name", name);
-		Writer result = serviceWriter.selectWriter(param).get(0);
+		List<Writer> temp = serviceWriter.selectWriter(param);
+		Writer result = new Writer();
+		if(temp.size() != 0) {
+			result = serviceWriter.selectWriter(param).get(0);	
+		}
 		return result;
 	}
 	
