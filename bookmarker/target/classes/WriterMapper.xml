@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.my.bookmarker.mapper.WriterMapper">
+
+	<insert id = "insertWriter" parameterType="com.my.bookmarker.vo.vanilla.Writer">
+		INSERT INTO WRITER_TB (
+			ID,
+			NAME
+		)
+		VALUES (
+			#{item.id},
+			#{item.name}
+		)
+	</insert>
+	
+	<update id= "incFreq" parameterType="String">
+		UPDATE WRITER_TB
+		SET FREQUENCY = FREQUENCY + 1
+		WHERE ID = #{id}
+	</update>
+	
+	<select id= "selectWriterId" resultType="com.my.bookmarker.vo.generator.Code">
+        SELECT
+            DATE_FORMAT(CURRENT_DATE(), '%y%m%d') AS CODE_DATE,
+            COUNT(*) AS CNT
+        FROM
+            WRITER_TB
+        WHERE
+            ID LIKE CONCAT(DATE_FORMAT(CURRENT_DATE(), '%y%m%d'), '%')
+	</select>
+	
+	<select id = "selectWriter" parameterType="map" resultType="com.my.bookmarker.vo.vanilla.Writer">
+		SELECT 
+			*
+		FROM
+			WRITER_TB
+		<if test='param.name!=null'>
+		WHERE
+			NAME = #{param.name}
+		</if>
+		ORDER BY ID ASC
+	</select>
+	
+</mapper>
