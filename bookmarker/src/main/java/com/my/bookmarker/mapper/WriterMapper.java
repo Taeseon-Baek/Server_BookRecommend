@@ -13,4 +13,5 @@ public interface WriterMapper {
 	public void insertWriter(@Param("item") Writer item);
 	public List<Writer> selectWriter(@Param("param") HashMap<String, Object> param);
 	public void incFreq(@Param("id") String id);
+	
 }

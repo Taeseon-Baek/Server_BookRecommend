@@ -44,7 +44,7 @@ public class InsertController {
 		List<Writer> temp = serviceWriter.selectWriter(param);
 		Writer result = new Writer();
 		if(temp.size() != 0) {
-			result = serviceWriter.selectWriter(param).get(0);	
+			result = temp.get(0);	
 		}
 		return result;
 	}
