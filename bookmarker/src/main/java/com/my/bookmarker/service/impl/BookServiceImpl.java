@@ -31,4 +31,12 @@ public class BookServiceImpl implements BookService {
 		// TODO Auto-generated method stub
 		return mapper.selectBook();
 	}
+	
+	@Override
+	public List<Book> findByWriter(String author){
+		
+		return mapper.findByWriter(author);
+		
+	}
+	
 }

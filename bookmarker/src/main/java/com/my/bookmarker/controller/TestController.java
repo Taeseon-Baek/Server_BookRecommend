@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.my.bookmarker.service.BookService;
+import com.my.bookmarker.service.WriterService;
 import com.my.bookmarker.vo.vanilla.Book;
 
 /**
@@ -28,6 +29,7 @@ public class TestController {
 	
 	@Autowired
 	private BookService serviceBook;
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -58,6 +60,13 @@ public class TestController {
 		result.add("¿‘¥œ¥Ÿ");
 		return result;
 	}
+	
+	@RequestMapping(value="/search/writer/{name_author}", method = RequestMethod.GET)
+	public List<Book> findByWriter(@PathVariable String name_author){
+		return serviceBook.findByWriter(name_author);
+	}
+
+	
 	
 }
 

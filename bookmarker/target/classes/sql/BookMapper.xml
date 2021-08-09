@@ -38,4 +38,18 @@
 		ORDER BY ID ASC
 	</select>
 	
+	<select id = "findByWriter" parameterType = "String" resultType = "com.my.bookmarker.vo.vanilla.Book">
+		SELECT
+			*
+		FROM
+			BOOK_TB BT
+		JOIN
+			WRITER_TB WT
+		ON
+			WT.ID = BT.WRITER_ID
+		WHERE
+			WT.NAME = #{author}
+		
+	</select>
+	
 </mapper>
