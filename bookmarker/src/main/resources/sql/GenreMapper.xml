@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.my.bookmarker.mapper.WriterMapper">
+<mapper namespace="com.my.bookmarker.mapper.GenreMapper">
 
-	<insert id = "insertWriter" parameterType="com.my.bookmarker.vo.vanilla.Writer">
-		INSERT INTO WRITER_TB (
+	<insert id = "insertGenre" parameterType="com.my.bookmarker.vo.vanilla.Genre">
+		INSERT INTO GENRE_TB (
 			ID,
 			NAME
 		)
@@ -14,19 +14,19 @@
 		)
 	</insert>
 	
-	<select id= "selectWriterId" resultType="com.my.bookmarker.vo.generator.Code">
+	<select id= "generateGenreId" resultType="com.my.bookmarker.vo.generator.Code">
         SELECT
             DATE_FORMAT(CURRENT_DATE(), '%y%m%d') AS CODE_DATE,
             COUNT(*) AS CNT
         FROM
-            WRITER_TB
+            GENRE_TB
 	</select>
 	
-	<select id = "selectWriter" parameterType="map" resultType="com.my.bookmarker.vo.vanilla.Writer">
+	<select id = "selectGenre" resultType="com.my.bookmarker.vo.vanilla.Genre">
 		SELECT 
 			*
 		FROM
-			WRITER_TB
+			GENRE_TB 
 		<if test='param.name!=null'>
 		WHERE
 			NAME = #{param.name}

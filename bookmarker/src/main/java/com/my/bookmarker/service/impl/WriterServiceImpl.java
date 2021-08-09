@@ -30,10 +30,4 @@ public class WriterServiceImpl implements WriterService {
 	public List<Writer> selectWriter(HashMap<String, Object> param) {
 		return mapper.selectWriter(param);
 	}
-
-	@Override
-	public void incFreq(String id) {
-		mapper.incFreq(id);
-	}
-	
 }

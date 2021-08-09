@@ -10,5 +10,4 @@ public interface WriterService {
 	public List<Code> selectWriterId();
 	public void insertWriter(Writer item);
 	public List<Writer> selectWriter(HashMap<String, Object> param);
-	public void incFreq(String id);
 }

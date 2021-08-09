@@ -8,13 +8,15 @@
 			ID,
 			TITLE,
 			CONTENT,
-			WRITER_ID
+			WRITER_ID,
+			GENRES
 		)
 		VALUES (
 			#{item.id},
 			#{item.title},
 			#{item.content},
-			#{item.writerId}
+			#{item.writerId},
+			#{item.genres}
 		)
 	</insert>
 	
