@@ -11,7 +11,7 @@ public interface BookMapper {
 
 	public List<Code> selectBookId();
 	public void insertBook(@Param("item") Book item);
-	public List<Book> selectBook();
+	public List<Book> selectBook(@Param("title") String title);
 	
 	
 	public List<Book> findByWriter(@Param("author") String author);

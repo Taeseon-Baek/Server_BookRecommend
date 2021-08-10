@@ -9,7 +9,7 @@ public interface BookService {
 	
 	public List<Code> selectBookId();
 	public void insertBook(Book item);
-	public List<Book> selectBook();
+	public List<Book> selectBook(String title);
 	
 	
 	public List<Book> findByWriter(String author);

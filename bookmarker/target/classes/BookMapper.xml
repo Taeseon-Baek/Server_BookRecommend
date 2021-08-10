@@ -35,6 +35,10 @@
 			*
 		FROM
 			BOOK_TB 
+		<if test='title != null'>
+		WHERE
+			TITLE = #{title}
+		</if>
 		ORDER BY ID ASC
 	</select>
 	
