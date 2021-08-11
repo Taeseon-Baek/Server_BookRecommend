@@ -3,6 +3,7 @@ package com.my.bookmarker.controller;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.my.bookmarker.service.BookService;
+import com.my.bookmarker.service.UtilService;
 import com.my.bookmarker.service.WriterService;
 import com.my.bookmarker.vo.vanilla.Book;
 
@@ -29,6 +31,8 @@ public class TestController {
 	
 	@Autowired
 	private BookService serviceBook;
+	@Autowired
+	private UtilService serviceUtil;
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -58,6 +62,19 @@ public class TestController {
 		result.add("테스트");
 		result.add(variable);
 		result.add("입니다");
+		return result;
+	}
+	
+	@RequestMapping(value = "/extract/{title}", method = RequestMethod.GET)
+	public HashMap<String, HashMap<String, Integer>> extractTest(@PathVariable(value = "title", required = false) String title) {
+		HashMap<String, HashMap<String, Integer>> result = new HashMap<String, HashMap<String,Integer>>();
+		
+		List<Book> bookList = serviceBook.selectBook(title);
+		
+		for (Book book : bookList) {
+			result.put(book.getTitle(), serviceUtil.extractNoun(book));
+		}
+		
 		return result;
 	}
 	
