@@ -65,17 +65,10 @@ public class TestController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/extract/{title}", method = RequestMethod.GET)
-	public HashMap<String, HashMap<String, Integer>> extractTest(@PathVariable(value = "title", required = false) String title) {
-		HashMap<String, HashMap<String, Integer>> result = new HashMap<String, HashMap<String,Integer>>();
+	@RequestMapping(value = "/extract", method = RequestMethod.GET)
+	public HashMap<String, HashMap<String, Integer>> extractTestAll() {
 		
-		List<Book> bookList = serviceBook.selectBook(title);
-		
-		for (Book book : bookList) {
-			result.put(book.getTitle(), serviceUtil.extractNoun(book));
-		}
-		
-		return result;
+		return serviceUtil.chainBook(serviceBook.selectBook(null));
 	}
 	
 	
