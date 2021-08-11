@@ -27,9 +27,9 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public List<Book> selectBook() {
+	public List<Book> selectBook(String title) {
 		// TODO Auto-generated method stub
-		return mapper.selectBook();
+		return mapper.selectBook(title);
 	}
 	
 	@Override

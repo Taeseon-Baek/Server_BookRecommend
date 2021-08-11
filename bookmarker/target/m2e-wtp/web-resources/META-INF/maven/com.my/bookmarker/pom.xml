@@ -14,6 +14,8 @@
 		<org.springframework-version>5.0.7.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 	
 	<repositories>
@@ -24,6 +26,14 @@
 	</repositories>
 
 	<dependencies>
+	
+		<!-- 셀레니움 크롤러 -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.141.59</version>
+		</dependency>
+		
 		<!-- 코모란 형태소 분석기 -->
 		<dependency>
 			<groupId>com.github.shin285</groupId>
@@ -175,6 +185,7 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 	<build>
 		<plugins>

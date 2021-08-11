@@ -49,7 +49,7 @@ public class TestController {
 	
 	@RequestMapping(value="/book", method= RequestMethod.GET)
 	public List<Book> testGet01() {
-		return serviceBook.selectBook();
+		return serviceBook.selectBook(null);
 	}
 	
 	@RequestMapping(value="/test/03/{variable}", method= RequestMethod.GET)
