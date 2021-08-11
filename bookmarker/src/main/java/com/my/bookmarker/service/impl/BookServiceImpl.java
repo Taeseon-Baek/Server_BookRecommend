@@ -35,8 +35,13 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<Book> findByWriter(String author){
 		
-		return mapper.findByWriter(author);
+		return mapper.findByWriter(author);	
+	}
+	
+	@Override
+	public List<Book> findByGenre(String genre){
 		
+		return mapper.findByGenre(genre);	
 	}
 	
 }

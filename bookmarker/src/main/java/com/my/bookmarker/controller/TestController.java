@@ -61,10 +61,7 @@ public class TestController {
 		return result;
 	}
 	
-	@RequestMapping(value="/search/writer/{name_author}", method = RequestMethod.GET)
-	public List<Book> findByWriter(@PathVariable String name_author){
-		return serviceBook.findByWriter(name_author);
-	}
+	
 
 	
 	

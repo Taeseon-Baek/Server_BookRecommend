@@ -15,4 +15,6 @@ public interface BookMapper {
 	
 	
 	public List<Book> findByWriter(@Param("author") String author);
+	
+	public List<Book> findByGenre(@Param("genre") String genre);
 }

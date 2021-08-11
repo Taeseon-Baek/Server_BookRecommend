@@ -49,7 +49,17 @@
 			WT.ID = BT.WRITER_ID
 		WHERE
 			WT.NAME = #{author}
-		
+	</select>
+	
+	<select id = "findByGenre" parameterType = "String" resultType = "com.my.bookmarker.vo.vanilla.Book">
+		SELECT
+			*
+		FROM
+			BOOK_TB BT
+		WHERE
+			SUBSTR(BT.GENRES, 1, INSTR(BT.GENRES,'/')-1) = #{genre}
+		OR
+			SUBSTR(BT.GENRES, INSTR(BT.GENRES, '/') + 1, CHAR_LENGTH(BT.GENRES) - INSTR(BT.GENRES, '/') - 1) = #{genre}
 	</select>
 	
 </mapper>
