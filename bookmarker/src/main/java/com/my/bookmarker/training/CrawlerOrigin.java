@@ -6,137 +6,128 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
 public class CrawlerOrigin {
-    public static final String WEB_DRIVER_ID = "webdriver.chrome.driver"; //µå¶óÀÌ¹ö ID
-	public static final String WEB_DRIVER_PATH = "src/driver/chromedriver.exe"; //µå¶óÀÌ¹ö °æ·Î
-    public static void main(String[] args) {
+	public static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
+	public static final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
+
+	public static void main(String[] args) {
 		try {
 			System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//Å©·Ò ¼³Á¤À» ´ãÀº °´Ã¼ »ı¼º
 		ChromeOptions options = new ChromeOptions();
-		//ºê¶ó¿ìÀú°¡ ´«¿¡ º¸ÀÌÁö ¾Ê°í ³»ºÎÀûÀ¸·Î µ·´Ù.
-		//¼³Á¤ÇÏÁö ¾ÊÀ» ½Ã ½ÇÁ¦ Å©·Ò Ã¢ÀÌ »ı¼ºµÇ°í, ¾î¶² ¼ø¼­·Î ÁøÇàµÇ´ÂÁö È®ÀÎÇÒ ¼ö ÀÖ´Ù.
-		// options.addArguments("headless");
-		
-		//À§¿¡¼­ ¼³Á¤ÇÑ ¿É¼ÇÀº ´ãÀº µå¶óÀÌ¹ö °´Ã¼ »ı¼º
-		//¿É¼ÇÀ» ¼³Á¤ÇÏÁö ¾Ê¾ÒÀ» ¶§¿¡´Â »ı·« °¡´ÉÇÏ´Ù.
-		//WebDriver°´Ã¼°¡ °ğ ÇÏ³ªÀÇ ºê¶ó¿ìÀú Ã¢ÀÌ¶ó »ı°¢ÇÑ´Ù.
-		WebDriver driver = new ChromeDriver(options);		
-		
-		//ÀÌµ¿À» ¿øÇÏ´Â url
-		String url = "https://www.ypbooks.co.kr/m_main.yp";
-		
-		//WebDriverÀ» ÇØ´ç url·Î ÀÌµ¿ÇÑ´Ù.
-		driver.get(url);
-		
-		//ºê¶ó¿ìÀú ÀÌµ¿½Ã »ı±â´Â ·Îµå½Ã°£À» ±â´Ù¸°´Ù.
-		//HTTPÀÀ´ä¼Óµµº¸´Ù ÀÚ¹ÙÀÇ ÄÄÆÄÀÏ ¼Óµµ°¡ ´õ ºü¸£±â ¶§¹®¿¡ ÀÓÀÇÀûÀ¸·Î 1ÃÊ¸¦ ´ë±âÇÑ´Ù.
-		try {Thread.sleep(1000);} catch (InterruptedException e) {}
-		
-		//tagName "span" ÀÎ ¸ğµç ÅÂ±×¸¦ °¡Áø WebElement¸®½ºÆ®¸¦ ¹Ş¾Æ¿Â´Ù.
-		//WebElement´Â htmlÀÇ ÅÂ±×¸¦ °¡Áö´Â Å¬·¡½ºÀÌ´Ù.
-		WebElement el1 = driver.findElement(By.xpath("//*[@id='main']/div/div/div[1]/div[1]/ul/li[2]/a/span"));
-		el1.click();
-		// Àå¸£ º£½ºÆ® ÈÄ Á¾ÇÕ º£½ºÆ®¸¦ À§ÇØ µû·Î ÀúÀå
-		String mem_url = driver.getCurrentUrl();
-		//Àå¸£ ºÎºĞ ºÎÅÍ ½ÃÀÛ 
-		WebElement btn_gen = driver.findElement(By.xpath("//*[@id='fieldBest']/a/span"));
-		btn_gen.click();
-		List<WebElement> genre_el1= driver.findElements(By.cssSelector("#bestTab li"));
-		HashMap<Integer,HashMap<String,String>> gbook = new HashMap();
-		HashMap<String,String> gbook_info = new HashMap();
-		String tmp_url_g = driver.getCurrentUrl();
+		WebDriver driver = new ChromeDriver(options);
 
-		for (int i = 0; i < genre_el1.size(); i++)
-		{
-			String genre = genre_el1.get(i).getText();
-			genre_el1.get(i).click();
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			List<WebElement> genre_el2 = driver.findElements(By.className("info-tit"));
-			int tmp_g = 0;
-			int num = 2;
-			for (int k = 0; k < genre_el2.size(); k++)
-			{
-				genre_el2.get(k).click();
-				try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				WebElement writer_g = driver.findElement(By.className("author"));
-				WebElement title_g = driver.findElement(By.xpath("//*[@id='wrap']/div[1]/div/div[1]/div[1]/div/h3"));
-				WebElement desc_g = driver.findElement(By.className("introduce"));
-				gbook_info.put("title",title_g.getText());
-				gbook_info.put("description",desc_g.getText());
-				gbook_info.put("writer",writer_g.getText());
-				gbook_info.put("genre",genre);
-				gbook.put(++tmp_g,gbook_info);
-				System.out.println(tmp_g + "¹ø :"+ desc_g.getText());
-				try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				//µÚ·Î °¡±â ¹öÆ° 
-				driver.navigate().back();
-				try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				WebElement btn_more = driver.findElement(By.id("moreBtn"));
-				for(int j = 0; j < num; j++)
-				{
-					btn_more.click();
-					try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				}
-				genre_el2 = driver.findElements(By.className("info-tit"));
-			}
-			driver.get(tmp_url_g);
-			btn_gen = driver.findElement(By.xpath("//*[@id='fieldBest']/a/span"));
-			btn_gen.click();
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			genre_el1= driver.findElements(By.cssSelector("#bestTab li"));
-		}
-		// ÀÌÁ¦ best ¸ñ·Ï ½ÃÀÛ
-		driver.get(mem_url);
-		//1ÃÊ ´ë±â
-		try {Thread.sleep(1000);} catch (InterruptedException e) {}
-		//´õº¸±â ¹öÆ° Å¬¸¯À» À§ÇÑ º¯¼ö 
-		List<WebElement> el2 = driver.findElements(By.className("info-tit"));
-		String tmp_url = driver.getCurrentUrl();
-		HashMap<Integer,HashMap<String,String>> book = new HashMap();
-		HashMap<String,String> book_info = new HashMap();
-		int tmp = 0;
-		int count = 9;
-		for (int i = 0; i < el2.size(); i++) {
-			el2.get(i).click();
-			WebElement writer = driver.findElement(By.className("author"));
-			WebElement title = driver.findElement(By.xpath("//*[@id='wrap']/div[1]/div/div[1]/div[1]/div/h3"));
-			WebElement desc = driver.findElement(By.className("introduce"));
-			book_info.put("title",title.getText());
-			book_info.put("description",desc.getText());
-			book_info.put("writer",writer.getText());
-			book.put(++tmp,book_info);
-			System.out.println(tmp + "¹ø :"+ title.getText());
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			driver.get(tmp_url);
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			WebElement btn_more = driver.findElement(By.id("moreBtn"));
-			for(int j = 0; j < count; j++)
-				{
-					btn_more.click();
-					try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				}
-			el2 = driver.findElements(By.className("info-tit"));
-		}
-
+		String main_url = "http://www.kyobobook.co.kr/index.laf";
+		driver.get(main_url);
 		try {
-			//µå¶óÀÌ¹ö°¡ nullÀÌ ¾Æ´Ï¶ó¸é
-			if(driver != null) {
-				//µå¶óÀÌ¹ö ¿¬°á Á¾·á
-				driver.close(); //µå¶óÀÌ¹ö ¿¬°á ÇØÁ¦
-				
-				//ÇÁ·Î¼¼½º Á¾·á
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+		}
+		
+		List<WebElement> bcat_el = driver.findElements(By.xpath("//*[@id='header']/div[3]/ul/li"));
+		//êµ­ë‚´ë„ì„œ , ì™¸êµ­ë„ì„œ urlì„ ìœ„í•´
+		String tmp_url;
+		for (int i = 0; i < bcat_el.size(); i++) {
+			if (bcat_el.get(i).getText().equals("êµ­ë‚´ë„ì„œ")) {
+				bcat_el.get(i).click();
+				tmp_url = driver.getCurrentUrl();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+				List<WebElement> scat_el = driver.findElements(By.xpath("//*[@id='main_snb']/div[1]/ul"));
+				for (int j = 0; j < scat_el.size(); j++) {
+					List<WebElement> scat_el2 = driver
+							.findElements(By.xpath("//*[@id='main_snb']/div[1]/ul[" + (j + 1) + "]/li"));
+					for (int k = 0; k < scat_el2.size(); k++) {
+						try {
+							WebElement scat_bt = driver.findElement(
+									By.xpath("//*[@id='main_snb']/div[1]/ul[" + (j + 1) + "]/li[" + (k + 1) + "]/ul"));
+							((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('style')",
+									scat_bt);
+							List<WebElement> scat_el3 = driver.findElements(By
+									.xpath("//*[@id='main_snb']/div[1]/ul[" + (j + 1) + "]/li[" + (k + 1) + "]/ul/li"));
+							for (int l = 0; l < scat_el3.size(); l++) {
+								scat_el3.get(l).click();
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+								}
+								List<WebElement> detail_enter_el = driver.findElements(
+										By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[2]/div[1]"));
+								int page = 1;
+								// page ìˆ˜ ì œí•œ ê±°ëŠ” ë³€ìˆ˜
+								int max = 2;
+								for (int o = 0; o < detail_enter_el.size(); o++) 
+								{
+									String title = detail_enter_el.get(o).getText();
+									detail_enter_el.get(o).click();
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e) {
+									}
+									// ì˜ˆì™¸ì²˜ë¦¬ë¥¼ ìœ„í•´ ë¦¬ìŠ¤íŠ¸ë¡œ ì²˜ë¦¬
+									List<WebElement> genre = driver.findElements(
+											By.xpath("//*[@id='container']/div[5]/div[1]/div[3]/ul/li/a[3]"));
+									List<WebElement> desc = driver.findElements(By.className("box_detail_article"));
+									List<WebElement> author = driver.findElements(By.className("name"));
+									System.out.println(o + "ë²ˆ ì œëª© :" + title);
+									driver.navigate().back();
+									try {
+										Thread.sleep(3000);
+									} catch (InterruptedException e) {
+									}
+									if(o == 19 && page < max)
+									{
+										WebElement page_bt;
+										if(page == 1)
+											page_bt = driver.findElement(By.xpath("//*[@id='eventPaging']/div/a"));
+										else
+											page_bt = driver.findElement(By.xpath("//*[@id='eventPaging']/div/a[2]"));
+										page +=1;
+										System.out.println(page);
+										o = 0;
+										page_bt.click();
+										try {
+											Thread.sleep(1000);
+										} catch (InterruptedException e) {
+										}
+									}
+									detail_enter_el = driver.findElements(
+											By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[2]/div[1]"));
+								}
+							}
+							driver.get(tmp_url);
+							System.out.println(tmp_url);
+						} catch (NoSuchElementException e) {
+							
+						}
+					}
+
+				}
+			} else if (bcat_el.get(i).getText().equals("í•´ì™¸ë„ì„œ")) {
+
+			}
+		}
+		try {
+			if (driver != null) {
+				driver.close();
+
 				driver.quit();
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
-    }
+	}
 }
