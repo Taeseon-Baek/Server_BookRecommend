@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.my.bookmarker.service.UtilService;
+import com.my.bookmarker.vo.util.GenrePercent;
 import com.my.bookmarker.vo.vanilla.Book;
 
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
@@ -89,4 +90,16 @@ public class UtilServiceImpl implements UtilService {
 		return result;
 	}
 
+	// 책 제목 입력 -> 장르 퍼센테이지로 출력
+	public List<GenrePercent> getGenrePercent(Book book) {
+		List<GenrePercent> result = new ArrayList<GenrePercent>();
+		
+		// DB: 책 제목 -> 책 장르
+		
+		return null;
+	}
+	// 책 n권 입력 -> 장르 퍼센테이지 출력
+	
+	// 장르 퍼센테이지 입력 -> 책 n권 출력
+	
 }
