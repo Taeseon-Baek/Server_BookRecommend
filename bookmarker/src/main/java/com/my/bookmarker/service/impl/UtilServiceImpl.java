@@ -1,11 +1,14 @@
 package com.my.bookmarker.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.my.bookmarker.mapper.BookMapper;
 import com.my.bookmarker.service.UtilService;
 import com.my.bookmarker.vo.util.GenrePercent;
 import com.my.bookmarker.vo.vanilla.Book;
@@ -18,6 +21,9 @@ import kr.co.shineware.nlp.komoran.model.Token;
 @Service
 public class UtilServiceImpl implements UtilService {
 	public static final Komoran komoran = new Komoran(DEFAULT_MODEL.FULL);
+	
+	@Autowired
+	private BookMapper mapperBook;
 
 	@Override
 	public HashMap<String, Integer> extractNoun(String content) {
@@ -90,15 +96,34 @@ public class UtilServiceImpl implements UtilService {
 		return result;
 	}
 
-	// 책 제목 입력 -> 장르 퍼센테이지로 출력
-	public List<GenrePercent> getGenrePercent(Book book) {
+	// 책 리스트 입력 -> 장르 퍼센테이지로 출력
+	public List<GenrePercent> getGenrePercent(List<Book> bookList) {
 		List<GenrePercent> result = new ArrayList<GenrePercent>();
 		
-		// DB: 책 제목 -> 책 장르
+		HashMap<String, Integer> container = new HashMap<String, Integer>();
 		
-		return null;
+		Integer cnt = 0;
+		
+		// 각 책 별로 반복
+		for (Book book : bookList) {
+			// 책 장르들 별로 반복
+			for (String genre : book.getGenres().split("/")) {
+				++cnt;
+				container.put(genre, (container.get(genre) == null) ? 1 : container.get(genre) + 1);
+			}
+		}
+		final Integer cntTotal = cnt;
+		
+		// 컨테이너 장르 별로 반복
+		container.forEach((key, value) -> {
+			GenrePercent newGenre = new GenrePercent();
+			newGenre.setGenre(key);
+			newGenre.setPercent((float) value / (float) cntTotal);
+			result.add(newGenre);
+		});
+		
+		return result;
 	}
-	// 책 n권 입력 -> 장르 퍼센테이지 출력
 	
 	// 장르 퍼센테이지 입력 -> 책 n권 출력
 	

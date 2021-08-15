@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.my.bookmarker.service.BookService;
 import com.my.bookmarker.service.UtilService;
 import com.my.bookmarker.service.WriterService;
+import com.my.bookmarker.vo.util.GenrePercent;
 import com.my.bookmarker.vo.vanilla.Book;
 
 /**
@@ -71,7 +72,10 @@ public class TestController {
 		return serviceUtil.chainBook(serviceBook.selectBook(null));
 	}
 	
-	
+	@RequestMapping(value = "/book/extract", method = RequestMethod.GET)
+	public List<GenrePercent> testExtractGenrePercent() {
+		return serviceUtil.getGenrePercent(serviceBook.selectBook(null));
+	}
 
 	
 	
