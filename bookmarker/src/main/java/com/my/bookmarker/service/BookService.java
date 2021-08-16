@@ -12,7 +12,7 @@ public interface BookService {
 	public List<Book> selectBook(String title);
 	
 	
-	public List<Book> findByWriter(String author);
+	public List<Book> searchByWriter(String author);
 	
-	public List<Book> findByGenre(String genre);
+	public List<Book> searchByGenre(String genre);
 }

@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.my.bookmarker.mapper.BookMapper">
+<mapper namespace="com.my.bookmarker.mapper.SelectMapper">
 
-	<insert id = "insertBook" parameterType="com.my.bookmarker.vo.vanilla.Book">
-		INSERT INTO BOOK_TB (
-			ID,
-			TITLE,
-			CONTENT,
-			WRITER_ID,
-			GENRES
-		)
-		VALUES (
-			#{item.id},
-			#{item.title},
-			#{item.content},
-			#{item.writerId},
-			#{item.genres}
-		)
-	</insert>
-	
 	<select id= "selectBookId" resultType="com.my.bookmarker.vo.generator.Code">
         SELECT
             DATE_FORMAT(CURRENT_DATE(), '%y%m%d') AS CODE_DATE,
@@ -66,4 +50,49 @@
 			SUBSTR(BT.GENRES, INSTR(BT.GENRES, '/') + 1, CHAR_LENGTH(BT.GENRES) - INSTR(BT.GENRES, '/') - 1) = #{genre}
 	</select>
 	
+	
+	
+	<select id= "generateGenreId" resultType="com.my.bookmarker.vo.generator.Code">
+        SELECT
+            DATE_FORMAT(CURRENT_DATE(), '%y%m%d') AS CODE_DATE,
+            COUNT(*) AS CNT
+        FROM
+            GENRE_TB
+	</select>
+	
+	<select id = "selectGenre" resultType="com.my.bookmarker.vo.vanilla.Genre">
+		SELECT 
+			*
+		FROM
+			GENRE_TB 
+		<if test='param.name!=null'>
+		WHERE
+			NAME = #{param.name}
+		</if>
+		ORDER BY ID ASC
+	</select>
+	
+	
+	
+	<select id= "selectWriterId" resultType="com.my.bookmarker.vo.generator.Code">
+        SELECT
+            DATE_FORMAT(CURRENT_DATE(), '%y%m%d') AS CODE_DATE,
+            COUNT(*) AS CNT
+        FROM
+            WRITER_TB
+	</select>
+	
+	<select id = "selectWriter" parameterType="map" resultType="com.my.bookmarker.vo.vanilla.Writer">
+		SELECT 
+			*
+		FROM
+			WRITER_TB
+		<if test='param.name!=null'>
+		WHERE
+			NAME = #{param.name}
+		</if>
+		ORDER BY ID ASC
+	</select>
+
+
 </mapper>
