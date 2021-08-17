@@ -42,7 +42,7 @@
 		ORDER BY ID ASC
 	</select>
 	
-	<select id = "findByWriter" parameterType = "String" resultType = "com.my.bookmarker.vo.vanilla.Book">
+	<select id = "searchByWriter" parameterType = "String" resultType = "com.my.bookmarker.vo.vanilla.Book">
 		SELECT
 			*
 		FROM
@@ -55,7 +55,7 @@
 			WT.NAME = #{author}
 	</select>
 	
-	<select id = "findByGenre" parameterType = "String" resultType = "com.my.bookmarker.vo.vanilla.Book">
+	<select id = "searchByGenre" parameterType = "String" resultType = "com.my.bookmarker.vo.vanilla.Book">
 		SELECT
 			*
 		FROM

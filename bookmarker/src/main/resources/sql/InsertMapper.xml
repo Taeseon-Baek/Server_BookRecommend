@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.my.bookmarker.mapper.InsertMapper">
+
+	<insert id = "insertBook" parameterType="com.my.bookmarker.vo.vanilla.Book">
+		INSERT INTO BOOK_TB (
+			ID,
+			TITLE,
+			CONTENT,
+			WRITER_ID,
+			GENRES
+		)
+		VALUES (
+			#{item.id},
+			#{item.title},
+			#{item.content},
+			#{item.writerId},
+			#{item.genres}
+		)
+	</insert>
+	
+	<insert id = "insertGenre" parameterType="com.my.bookmarker.vo.vanilla.Genre">
+		INSERT INTO GENRE_TB (
+			ID,
+			NAME
+		)
+		VALUES (
+			#{item.id},
+			#{item.name}
+		)
+	</insert>
+	
+	<insert id = "insertWriter" parameterType="com.my.bookmarker.vo.vanilla.Writer">
+		INSERT INTO WRITER_TB (
+			ID,
+			NAME
+		)
+		VALUES (
+			#{item.id},
+			#{item.name}
+		)
+	</insert>
+
+
+</mapper>
