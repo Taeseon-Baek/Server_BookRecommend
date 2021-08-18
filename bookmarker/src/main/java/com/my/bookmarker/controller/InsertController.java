@@ -26,7 +26,7 @@ import com.my.bookmarker.vo.vanilla.Writer;
 @RestController
 @RequestMapping(value = "/insert")
 public class InsertController {
-	
+
 	@Autowired
 	private BookService serviceBook;
 	@Autowired
@@ -35,36 +35,30 @@ public class InsertController {
 	private GenreService serviceGenre;
 	@Autowired
 	private CrawlerService serviceCrawler;
-	
-	private ArrayList<String> alphabet = 
-			new ArrayList<String>(Arrays.asList(
-					"a", "b", "c", "d", "e", "f", 
-					"g", "h", "i", "j", "k", "l", 
-					"m", "n", "o", "p", "q", "r", 
-					"s", "t", "u", "v", "w", "x", 
-					"y", "z" 
-					)); 
-	
+
+	private ArrayList<String> alphabet = new ArrayList<String>(Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h",
+			"i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"));
+
 	@RequestMapping(value = "/writer/{name}", method = RequestMethod.GET)
 	public Writer test(@PathVariable String name) {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("name", name);
 		List<Writer> temp = serviceWriter.selectWriter(param);
 		Writer result = new Writer();
-		if(temp.size() != 0) {
-			result = temp.get(0);	
+		if (temp.size() != 0) {
+			result = temp.get(0);
 		}
 		return result;
 	}
-	
-	@RequestMapping(value = "/crawling/yp/{cntBook}", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/crawling/kb/{cntBook}", method = RequestMethod.GET)
 	public void insertBookTest(@PathVariable int cntBook) {
 		List<Book> books = serviceCrawler.crawlBookInfo(cntBook);
-		
+
 		for (Book book : books) {
-			// ±âÁ¸ÀÇ °°Àº Á¦¸ñ Ã¥ÀÌ Á¸Àç ? Ãß°¡ ¾ÈÇÔ : Ãß°¡ÇÔ
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ? ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ : ï¿½ß°ï¿½ï¿½ï¿½
 			if (serviceBook.selectBook(book.getTitle()).size() == 0) {
-				// ÄÚµå »ý¼º ·ÎÁ÷: ³¯Â¥ + 26Áø¹ý ÄÚµå ºÎÂø
+				// ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½Â¥ + 26ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
 				Code codeForm = serviceBook.selectBookId().get(0);
 				String code = codeForm.getCodeDate();
 				int cnt = codeForm.getCnt();
@@ -76,15 +70,15 @@ public class InsertController {
 					code += alphabet.get(cnt % alphabet.size());
 					cnt /= size;
 				}
-				// Ã¥ ÄÚµå »ðÀÔ
+				// Ã¥ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
 				book.setId(code);
-				
-				// ÀúÀÚ °Ë»ö -> ÀúÀÚ Á¸Àç ? Á¸ÀçÇÏ´Â ÀúÀÚ È£Ãâ : ÀúÀÚ »ý¼º
+
+				// ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ -> ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ? ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				HashMap<String, Object> param = new HashMap<String, Object>();
 				param.put("name", book.getWriter());
 				List<Writer> writerCheck = serviceWriter.selectWriter(param);
 				Writer writerInfo = new Writer();
-				
+
 				if (writerCheck.size() != 0) {
 					writerInfo = writerCheck.get(0);
 				} else {
@@ -92,26 +86,28 @@ public class InsertController {
 					code = "W_";
 					cnt = codeForm.getCnt();
 					if (cnt < 10) {
-						code += "000" + cnt;
+						code += "0000" + cnt;
 					} else if (cnt < 100) {
-						code += "00" + cnt;
+						code += "000" + cnt;
 					} else if (cnt < 1000) {
-						code += "0" + cnt;
+						code += "00" + cnt;
 					} else if (cnt < 10000) {
+						code += "0" + cnt;
+					} else if (cnt < 100000) {
 						code += "" + cnt;
-					} 
+					}
 					writerInfo.setName(book.getWriter());
 					writerInfo.setId(code);
 					writerInfo.setFrequency(1);
 					serviceWriter.insertWriter(writerInfo);
 				}
-				// ÀúÀÚ ÄÚµå »ðÀÔ
+				// ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
 				book.setWriterId(writerInfo.getId());
 
 				String genresInsert = "";
 				for (String genre : book.getGenres().split("/")) {
 					genresInsert += genre + "/";
-					// Àå¸£ °Ë»ö -> Àå¸£ Á¸Àç ? Á¸ÀçÇÏ´Â Àå¸£ È£Ãâ : Àå¸£ »ý¼º
+					// ï¿½å¸£ ï¿½Ë»ï¿½ -> ï¿½å¸£ ï¿½ï¿½ï¿½ï¿½ ? ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½å¸£ È£ï¿½ï¿½ : ï¿½å¸£ ï¿½ï¿½ï¿½ï¿½
 					param = new HashMap<String, Object>();
 					param.put("name", genre);
 					List<Genre> genreCheck = serviceGenre.selectGenre(param);
@@ -123,32 +119,34 @@ public class InsertController {
 						code = "G_";
 						cnt = codeForm.getCnt();
 						if (cnt < 10) {
-							code += "000" + cnt;
+							code += "0000" + cnt;
 						} else if (cnt < 100) {
-							code += "00" + cnt;
+							code += "000" + cnt;
 						} else if (cnt < 1000) {
-							code += "0" + cnt;
+							code += "00" + cnt;
 						} else if (cnt < 10000) {
+							code += "0" + cnt;
+						} else if (cnt < 100000) {
 							code += "" + cnt;
 						}
 						genreInfo.setId(code);
 						genreInfo.setName(genre);
 						serviceGenre.insertGenre(genreInfo);
 					}
-					
-					// Àå¸£ ~ Ã¥ ¿¬°ü¼º »ðÀÔ
+
+					// ï¿½å¸£ ~ Ã¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 					book.setGenres(genresInsert);
 
 					try {
 						serviceBook.insertBook(book);
 					} catch (DataIntegrityViolationException e) {
-						System.out.println("ÄÚµå°ª Áßº¹");
+						System.out.println("ï¿½Úµå°ª ï¿½ßºï¿½");
 						System.out.println(e);
 					}
-					System.out.println("Ã¥ ½Å±Ô »ðÀÔ: " + book.toString());
+					System.out.println("Ã¥ ï¿½Å±ï¿½ ï¿½ï¿½ï¿½ï¿½: " + book.toString());
 				}
 			} else {
-				System.out.println("°°Àº Á¦¸ñÀÇ Ã¥ Á¸Àç");
+				System.out.println("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¥ ï¿½ï¿½ï¿½ï¿½");
 			}
 		}
 	}

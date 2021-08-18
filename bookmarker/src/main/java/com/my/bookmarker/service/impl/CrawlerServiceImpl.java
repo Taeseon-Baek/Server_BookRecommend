@@ -1,10 +1,11 @@
 package com.my.bookmarker.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,9 +17,12 @@ import com.my.bookmarker.vo.vanilla.Book;
 
 @Service
 public class CrawlerServiceImpl implements CrawlerService {
-    public static final String WEB_DRIVER_ID = "webdriver.chrome.driver"; //����̹� ID
-	public static final String WEB_DRIVER_PATH = "src/driver/chromedriver.exe"; //����̹� ���
-	
+	public static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
+	public static final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
+	static ChromeOptions options;
+	static WebDriver driver;
+	String url = "http://www.kyobobook.co.kr/indexKor.laf?mallGb=KOR&orderClick=c1a";
+
 	private void setDriver() {
 		try {
 			System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
@@ -30,112 +34,69 @@ public class CrawlerServiceImpl implements CrawlerService {
 	@Override
 	public List<Book> crawlBookInfo(int cntBook) {
 		setDriver();
-		
-		List<Book> booksInfo = new ArrayList<Book>();
-		
-		ChromeOptions options = new ChromeOptions();
-		
-		WebDriver driver = new ChromeDriver(options);		
-		
-		String url = "https://www.ypbooks.co.kr/m_main.yp";
-		
-		driver.get(url);
-		
-		try {Thread.sleep(1000);} catch (InterruptedException e) {}
-		
-		/*
-		WebElement el1 = driver.findElement(By.xpath("//*[@id='main']/div/div/div[1]/div[1]/ul/li[2]/a/span"));
-		el1.click();
-		String mem_url = driver.getCurrentUrl();
-		WebElement btn_gen = driver.findElement(By.xpath("//*[@id='fieldBest']/a/span"));
-		btn_gen.click();
-		List<WebElement> genre_el1= driver.findElements(By.cssSelector("#bestTab li"));
-		String tmp_url_g = driver.getCurrentUrl();
 
-		for (int i = 0; i < genre_el1.size(); i++)
-		{
-			String genre = genre_el1.get(i).getText();
-			genre_el1.get(i).click();
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			List<WebElement> genre_el2 = driver.findElements(By.className("info-tit"));
-			int num = 2;
-			for (int k = 0; k < cntBook; k++)
-			{
-				Book newBook = new Book();
-				
-				genre_el2.get(k).click();
-				try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				WebElement writer_g = driver.findElement(By.className("author"));
-				WebElement title_g = driver.findElement(By.xpath("//*[@id='wrap']/div[1]/div/div[1]/div[1]/div/h3"));
-				WebElement desc_g = driver.findElement(By.className("introduce"));
-				
-				newBook.setTitle(title_g.getText());
-				newBook.setContent(desc_g.getText());
-				newBook.setWriter(writer_g.getText());
-				newBook.setGenres(genre);
-				
-				booksInfo.add(newBook);
-				
-				try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				driver.navigate().back();
-				try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				WebElement btn_more = driver.findElement(By.id("moreBtn"));
-				for(int j = 0; j < num; j++)
-				{
-					btn_more.click();
-					try {Thread.sleep(1000);} catch (InterruptedException e) {}
-				}
-				genre_el2 = driver.findElements(By.className("info-tit"));
-			}
-			driver.get(tmp_url_g);
-			btn_gen = driver.findElement(By.xpath("//*[@id='fieldBest']/a/span"));
-			btn_gen.click();
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			genre_el1= driver.findElements(By.cssSelector("#bestTab li"));
+		List<Book> booksInfo = new ArrayList<Book>();
+
+		options = new ChromeOptions();
+
+		driver = new ChromeDriver(options);
+
+		driver.get(url);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
 		}
-		
-		
-		driver.get(mem_url);
-		try {Thread.sleep(1000);} catch (InterruptedException e) {}
-		List<WebElement> el2 = driver.findElements(By.className("info-tit"));
-		String tmp_url = driver.getCurrentUrl();
-		HashMap<Integer,HashMap<String,String>> book = new HashMap();
-		HashMap<String,String> book_info = new HashMap();
-		int tmp = 0;
-		int count = 9;
-		for (int i = 0; i < el2.size(); i++) {
-			el2.get(i).click();
-			WebElement writer = driver.findElement(By.className("author"));
-			WebElement title = driver.findElement(By.xpath("//*[@id='wrap']/div[1]/div/div[1]/div[1]/div/h3"));
-			WebElement desc = driver.findElement(By.className("introduce"));
-			book_info.put("title",title.getText());
-			book_info.put("description",desc.getText());
-			book_info.put("writer",writer.getText());
-			book.put(++tmp,book_info);
-			System.out.println(tmp + "�� :"+ title.getText());
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			driver.get(tmp_url);
-			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			WebElement btn_more = driver.findElement(By.id("moreBtn"));
-			for(int j = 0; j < count; j++)
-				{
-					btn_more.click();
-					try {Thread.sleep(1000);} catch (InterruptedException e) {}
+		// 국내도서 해외도서가 필요할 경우 코드 수정 다시하겠습니다.
+		// 국내도서 카테고리 큰칸
+		List<WebElement> bcat_el = driver.findElements(By.xpath("//*[@id='main_snb']/div[1]/ul"));
+		for (int i = 0; i < bcat_el.size(); i++) {
+			// 첫번째 큰 카테고리의 원소들을 모으기 위해 !
+			List<WebElement> mcat_el = driver
+					.findElements(By.xpath("//*[@id='main_snb']/div[1]/ul[" + (i + 1) + "]/li"));
+			WebElement scat_bt;
+			List<WebElement> scat_el;
+			for (int j = 0; j < mcat_el.size(); j++) {
+				try {
+					scat_bt = driver.findElement(
+							By.xpath("//*[@id='main_snb']/div[1]/ul[" + (i + 1) + "]/li[" + (j + 1) + "]/ul"));
+					((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('style')", scat_bt);
+					scat_el = driver.findElements(
+							By.xpath("//*[@id='main_snb']/div[1]/ul[" + (i + 1) + "]/li[" + (j + 1) + "]/ul/li"));
+					for (int k = 0; k < scat_el.size(); k++) {
+						scat_el.get(k).click();
+						System.out.println("error");
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+						}
+						booksInfo.addAll(get_info(driver, cntBook, booksInfo));
+						driver.get(url);
+						scat_bt = driver.findElement(
+								By.xpath("//*[@id='main_snb']/div[1]/ul[" + (i + 1) + "]/li[" + (j + 1) + "]/ul"));
+						((JavascriptExecutor) driver).executeScript("arguments[0].removeAttribute('style')", scat_bt);
+						scat_el = driver.findElements(
+								By.xpath("//*[@id='main_snb']/div[1]/ul[" + (i + 1) + "]/li[" + (j + 1) + "]/ul/li"));
+					}
+				} catch (NoSuchElementException e) {
+					scat_el = driver.findElements(
+							By.xpath("//*[@id='main_snb']/div[1]/ul[" + (i + 1) + "]/li[" + (j + 1) + "]"));
+					get_info(driver, cntBook, booksInfo);
 				}
-			el2 = driver.findElements(By.className("info-tit"));
-		} 
- */
+				mcat_el = driver.findElements(By.xpath("//*[@id='main_snb']/div[1]/ul[" + (i + 1) + "]/li"));
+			}
+			scat_el = driver.findElements(By.xpath("//*[@id='main_snb']/div[1]/ul"));
+		}
+		// 해외도서 부분 작성 해야하는데 지금 굳이 필요할지 모르겠음...
 
 		try {
-			if(driver != null) {
-				driver.close(); 
-				
+			if (driver != null) {
+				driver.close();
+
 				driver.quit();
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		
 		return booksInfo;
 	}
 
@@ -144,6 +105,84 @@ public class CrawlerServiceImpl implements CrawlerService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
+	public List<Book> get_info(WebDriver driver, int cntbook, List<Book> booksInfo) {
+		int max = cntbook / 20;
+		int page = 1;
+		int cnt = 0;
+		Book newBook = new Book();
+		WebElement page_bt;
+		List<WebElement> detail_enter_el = driver
+				.findElements(By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[2]/div[1]"));
+		// for image and 19 예외처리
+		List<WebElement> detail_19 = driver
+				.findElements(By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[1]/div/a"));
+		// 책의 정보를 읽는 for 구문
+		for (int o = 0; o < detail_enter_el.size(); o++) {
+			// 제목은 일부러 따로 해놓는게 편해서 했음
+			// 이 부분에 성인 19세 예외처리 부분
+			if (detail_19.get(o).getAttribute("href").contains(" '19')"))
+				o++;
+			detail_enter_el.get(o).click();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+			}
+			// 예외처리를 위해 리스트로 처리 정확히 책 정보를 들고오는 부분...
+			// 필요한 정보는 여기서 수정 가능
+			// 장르 변수
+			String genre = "";
+			List<WebElement> genre_el = driver.findElements(By.className("location"));
+
+			for (int i = 0; i < genre_el.size(); i++) {
+				genre = genre + "/" + genre_el.get(i).getText();
+			}
+			WebElement title = driver.findElement(By.xpath("//*[@id='container']/div[2]/form/div[1]/h1/strong"));
+			WebElement src;
+			if (title.getText().equals("향연: 사랑에 관하여")) {
+				src = driver
+						.findElement(By.xpath("//*[@id=\"container\"]/div[2]/form/div[2]/div[1]/div/img"));
+			} else {
+				src = driver
+						.findElement(By.xpath("//*[@id='container']/div[2]/form/div[2]/div[1]/div/a/img"));
+
+			}
+			List<WebElement> desc = driver.findElements(By.className("box_detail_article"));
+			List<WebElement> author = driver.findElements(By.className("name"));
+			newBook.setTitle(title.getText());
+			newBook.setContent(desc.get(0).getText());
+			newBook.setWriter(author.get(0).getText());
+			newBook.setGenres(genre);
+			newBook.setImageUrl(src.getAttribute("src"));
+			booksInfo.add(newBook);
+			System.out.println(cnt + "번 객체 :" + newBook.toString());
+			cnt++;
+			driver.navigate().back();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+			if (cnt == cntbook) {
+				return booksInfo;
+			}
+			if (o == 19 && page <= max) {
+				if (page == 1) {
+					page_bt = driver.findElement(By.xpath("//*[@id='eventPaging']/div/a"));
+				} else {
+					page_bt = driver.findElement(By.xpath("//*[@id='eventPaging']/div/a[2]"));
+				}
+				JavascriptExecutor jscriptExecutor = (JavascriptExecutor) driver;
+				o = 0;
+				page++;
+				jscriptExecutor.executeScript("arguments[0].click();", page_bt);
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+			detail_enter_el = driver.findElements(By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[2]/div[1]"));
+			detail_19 = driver.findElements(By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[1]/div/a"));
+		}
+		return booksInfo;
+	}
 }

@@ -15,7 +15,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class CrawlerOrigin {
+	/*
 	public static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
 	public static final String WEB_DRIVER_PATH = "/usr/local/bin/chromedriver";
 	static ChromeOptions options = new ChromeOptions();
@@ -96,7 +98,7 @@ public class CrawlerOrigin {
 				driver.quit();
 			}
 		} catch (Exception e) {
-
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -105,7 +107,7 @@ public class CrawlerOrigin {
 		List<WebElement> detail_enter_el = driver
 				.findElements(By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[2]/div[1]"));
 		//for image and 19 예외처리
-		List<WebElement> detail_src = driver
+		List<WebElement> detail_19 = driver
 				.findElements(By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[1]/div/a"));
 		// 페이지 변수
 		int page = 1;
@@ -115,11 +117,10 @@ public class CrawlerOrigin {
 		WebElement page_bt;
 		// 책의 정보를 읽는 for 구문
 		for (int o = 0; o < detail_enter_el.size(); o++) {
-			// 제목은 일부러 따로 해놓는게 편해서 했음
-			String title = detail_enter_el.get(o).getText();
 			// 이 부분에 성인 19세 예외처리 부분
-			if(detail_src.get(o).getAttribute("href").contains("19"))
+			if(detail_19.get(o).getAttribute("href").contains("19"))
 				o++;
+			String title = detail_enter_el.get(o).getText();
 			detail_enter_el.get(o).click();
 			try {
 				Thread.sleep(1000);
@@ -127,11 +128,21 @@ public class CrawlerOrigin {
 			}
 			// 예외처리를 위해 리스트로 처리 정확히 책 정보를 들고오는 부분...
 			// 필요한 정보는 여기서 수정 가능
-			List<WebElement> genre = driver
-					.findElements(By.xpath("//*[@id='container']/div[5]/div[1]/div[3]/ul/li/a[3]"));
+			// 장르 변수
+			String genre = "";
+			for(int i = 2; i < 6; i++)
+			{
+				WebElement genre_1 = driver.findElement(By.xpath("//*[@id='container']/div[1]/div["+i+"]/p/span"));
+				genre = genre + "/" + genre_1.getText(); 
+			}
 			List<WebElement> desc = driver.findElements(By.className("box_detail_article"));
+			WebElement src = driver.findElement(By.xpath("//*[@id='container']/div[2]/form/div[2]/div[1]/div/a/img"));
 			List<WebElement> author = driver.findElements(By.className("name"));
 			System.out.println(o + "번 제목 :" + title);
+			System.out.println(o + "번 설명 :" + desc.get(0).getText());
+			System.out.println(o + "번 장르 :" + genre);
+			System.out.println(o + "번 저자 :" + author.get(0).getText());
+			System.out.println(src.getAttribute("src"));
 			driver.navigate().back();
 			try {
 				Thread.sleep(3000);
@@ -163,9 +174,10 @@ public class CrawlerOrigin {
 				break;
 			}
 			detail_enter_el = driver.findElements(By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[2]/div[1]"));
-			detail_src = driver
+			detail_19 = driver
 				.findElements(By.xpath("//*[@id='prd_list_type1']/li/div/div[1]/div[1]/div/a"));
 		}
 		System.out.println("complete");
 	}
+	*/
 }
